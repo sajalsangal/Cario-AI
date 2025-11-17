@@ -161,7 +161,7 @@ const AboutUs = () => {
             </h2>
             <p className="text-left text-gray-700 text-xs md:text-base leading-relaxed">
               CarioAI blends the essence of your career journey with intelligent technology.<br className="hidden md:block"/>
-              Our name reflects what we stand for helping you grow, explore, and make smarter steps toward the opportunities that match your ambitions.
+              Our name reflects what we stand for — helping you grow, explore, and make smarter steps toward the opportunities that match your ambitions.
             </p>
           </div>
 
@@ -192,7 +192,7 @@ const AboutUs = () => {
               </div>
               <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4 text-center">Our Mission</h2>
               <p className="text-xs md:text-base leading-relaxed text-center">
-                Job searching shouldn't feel overwhelming. Our mission is to simplify the entire process by offering AI-powered tools that bring clarity, accuracy, and confidence to every candidate  no matter where they are in their career.
+                Job searching shouldn't feel overwhelming. Our mission is to simplify the entire process by offering AI-powered tools that bring clarity, accuracy, and confidence to every candidate — no matter where they are in their career.
               </p>
             </div>
           </div>
@@ -225,7 +225,7 @@ const AboutUs = () => {
                 Job Matching
               </h3>
               <p className="text-xs md:text-sm text-gray-800 text-center leading-relaxed">
-                Upload your resume once our AI analyzes your experience, skills, and goals to instantly recommend relevant job roles. No more endless searching.
+                Upload your resume once — our AI analyzes your experience, skills, and goals to instantly recommend relevant job roles. No more endless searching.
               </p>
             </div>
 
@@ -299,7 +299,7 @@ const AboutUs = () => {
                 AI News & Career Insights
               </h3>
               <p className="text-xs md:text-sm text-gray-800 text-center leading-relaxed">
-                Stay updated with AI-powered job market insights, industry trends, and career news tailored to your interests helping you stay ahead and informed.
+                Stay updated with AI-powered job market insights, industry trends, and career news tailored to your interests — helping you stay ahead and informed.
               </p>
             </div>
           </div>
