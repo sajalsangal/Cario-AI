@@ -44,9 +44,9 @@ const ATSReviewContent = ({ apiKey, selectedFile }) => {
     <div className="max-w-5xl mx-auto">
 
       {/* Resume Content Box with Enhanced Animation */}
-      <div className={`bg-white border-2 border-[#4db8e8] rounded-2xl p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '700ms' }}>
-        <h4 className='text-center font-semibold text-3xl text-gray-600 mb-4'>Get Free Resume Analysis With Feedback</h4>
-        <div className="flex items-start gap-3 mb-6">
+      <div className={`bg-white border-2 border-[#4db8e8] rounded-2xl p-4 sm:p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left`}>
+        <h4 className='text-center font-semibold text-2xl sm:text-3xl text-gray-600 mb-4 animate-fade-in'>Get Free Resume Analysis With Feedback</h4>
+        <div className="flex items-start gap-3 mb-6 animate-slide-in-right" style={{ animationDelay: '0.2s' }}>
           <svg className={`w-6 h-6 flex-shrink-0 mt-1 transition-all duration-300`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
@@ -55,7 +55,7 @@ const ATSReviewContent = ({ apiKey, selectedFile }) => {
             <>
               <textarea
                 placeholder="(Optional) Paste Job Description for better matching..."
-                className="w-full h-32 border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-blue-500"
+                className="w-full h-32 border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                 value={jobDesc}
                 onChange={(e) => setJobDesc(e.target.value)}
               />
@@ -66,11 +66,11 @@ const ATSReviewContent = ({ apiKey, selectedFile }) => {
 
 
         {/* Analyze Button with Enhanced Effects */}
-        <div className={`flex justify-end transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '900ms' }}>
+        <div className={`flex justify-end animate-slide-in-up`} style={{ animationDelay: '0.4s' }}>
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing}
-            className={`text-white px-12 py-4 rounded-lg text-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 ${isAnalyzing
+            className={`text-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-lg sm:text-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 sm:hover:scale-110 active:scale-95 ${isAnalyzing
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-[#e85d75] hover:bg-[#d94967]'
               }`}

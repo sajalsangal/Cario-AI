@@ -85,101 +85,108 @@ const AINews = () => {
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-8 py-16">
         {/* Header with Animation */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-6xl font-black text-black mb-6 tracking-tight hover:scale-105 transition-transform duration-300 cursor-default">
+        <div className={`text-center mb-12 sm:mb-16`}>
+          <h1 className="text-4xl sm:text-6xl font-black text-black mb-4 sm:mb-6 tracking-tight hover:scale-105 transition-transform duration-300 cursor-default animate-fade-in-down">
             Latest News
           </h1>
-          <p className="text-2xl text-[#e85d75] font-bold hover:text-[#d94967] transition-colors duration-300">
+          <p className="text-base sm:text-2xl text-[#e85d75] font-bold hover:text-[#d94967] transition-colors duration-300 px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             "Stay ahead with updates on latest AI trends and more, live updated for you daily !"
           </p>
         </div>
 
         {/* News Cards Grid with Staggered Animation */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {news.map((article, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+        {news.map((article, index) => {
+          const isEven = index % 2 === 0;
+          const mobileAnimationClass = isEven ? 'md:animate-none animate-slide-in-left' : 'md:animate-none animate-slide-in-right';
+          
+          return (
           <div 
               key={index}
-              className={`bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] group cursor-pointer border border-transparent hover:border-[#e85d75]/20 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+              className={`bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] group cursor-pointer border border-transparent hover:border-[#e85d75]/20 ${mobileAnimationClass}`}
               style={{
-                transitionDelay: `${index * 150}ms`
+                animationDelay: `${index * 0.15}s`
               }}
             >
             {article.urlToImage && (
               <img
                 src={article.urlToImage}
                 alt={article.title}
-                className="w-full h-48 object-cover"
+                className="w-full h-40 sm:h-48 object-cover rounded-t-2xl sm:rounded-t-3xl"
               />
             )}
-            <div className="p-4 flex flex-col justify-between h-60">
-              <h3 className="text-xl font-bold text-black mb-4 leading-tight group-hover:text-[#e85d75] transition-colors duration-300">
+            <div className="p-3 sm:p-4 flex flex-col justify-between h-52 sm:h-60">
+              <h3 className="text-base sm:text-xl font-bold text-black mb-2 sm:mb-4 leading-tight group-hover:text-[#e85d75] transition-colors duration-300">
                 {article.title}
               </h3>
-              <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+              <p className="text-xs sm:text-sm text-gray-600 mt-2 line-clamp-3">
                 {article.description || "No description available."}
               </p>
               <a
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-block text-indigo-600 font-medium hover:text-indigo-800"
+                className="mt-3 sm:mt-4 inline-block text-indigo-600 text-sm sm:text-base font-medium hover:text-indigo-800 transition-colors duration-300"
               >
                 Read more →
               </a>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
         {/* Newsletter Section with Animation */}
-        <div className={`pt-10 text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '800ms'}}>
-          <h2 className="text-4xl font-black text-black mb-4 hover:scale-105 transition-transform duration-300">
+        <div className={`pt-8 sm:pt-10 text-center mb-16 sm:mb-20 px-4`}>
+          <h2 className="text-2xl sm:text-4xl font-black text-black mb-3 sm:mb-4 hover:scale-105 transition-transform duration-300 animate-fade-in-up animate-pulse-subtle" style={{ animationDelay: '0.5s' }}>
             Never Miss an Update
           </h2>
-          <p className="text-lg text-gray-700 mb-8 hover:text-gray-800 transition-colors duration-300">
+          <p className="text-sm sm:text-lg text-gray-700 mb-6 sm:mb-8 hover:text-gray-800 transition-colors duration-300 animate-fade-in" style={{ animationDelay: '0.6s' }}>
             Get the latest AI news, job market insights, and developer tools delivered to your inbox weekly.
           </p>
-          <form onSubmit={handleSubscribe} className="space-y-2 md:flex items-center justify-center gap-4 max-w-2xl mx-auto group">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto group">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your Email"
-              className="flex-1 px-8 py-4 rounded-full border-2 border-gray-300 text-lg focus:outline-none focus:border-[#e85d75] focus:shadow-lg focus:scale-[1.02] transition-all duration-300 hover:border-[#e85d75]/50"
+              className="flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-gray-300 text-base sm:text-lg focus:outline-none focus:border-[#e85d75] focus:shadow-lg focus:shadow-pink-200 focus:scale-[1.02] transition-all duration-300 hover:border-[#e85d75]/50 hover:shadow-md animate-slide-in-left"
+              style={{ animationDelay: '0.7s' }}
               required
             />
             <button
               type="submit"
-              className="bg-[#e85d75] hover:bg-[#d94967] text-white px-12 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
+              className="bg-gradient-to-r from-[#e85d75] to-[#d94967] hover:from-[#d94967] hover:to-[#c93857] text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full text-base sm:text-lg font-bold shadow-lg shadow-pink-300 hover:shadow-2xl hover:shadow-pink-400 transition-all duration-300 hover:scale-105 sm:hover:scale-110 active:scale-95 animate-slide-in-right relative overflow-hidden group"
+              style={{ animationDelay: '0.7s' }}
             >
-              Subscribe
+              <span className="relative z-10">Subscribe</span>
+              <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
             </button>
           </form>
         </div>
 
         {/* Trending Topics with Animation */}
-        <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '1000ms'}}>
-          <h2 className="text-4xl font-black text-black mb-8 hover:scale-105 transition-transform duration-300">
+        <div className={`text-center px-4`}>
+          <h2 className="text-2xl sm:text-4xl font-black text-black mb-6 sm:mb-8 hover:scale-105 transition-transform duration-300 animate-fade-in-up animate-pulse-subtle" style={{ animationDelay: '0.8s' }}>
             Trending Topics
           </h2>
-          <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-4xl mx-auto">
             {trendingTopics.map((topic, index) => (
               <button
                 key={index}
-                className={`px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${
+                className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300 hover:scale-105 sm:hover:scale-110 hover:-translate-y-2 hover:shadow-xl hover:rotate-2 active:scale-95 active:rotate-0 animate-fade-in relative overflow-hidden group ${
                   index % 3 === 0
-                    ? 'bg-[#e8d9f9] text-black hover:bg-[#d4b5f7] hover:shadow-purple-200'
+                    ? 'bg-[#e8d9f9] text-black hover:bg-[#d4b5f7] hover:shadow-purple-300'
                     : index % 3 === 1
-                    ? 'bg-[#ffd4e0] text-black hover:bg-[#ffb8cc] hover:shadow-pink-200'
-                    : 'bg-[#e0e0e0] text-black hover:bg-[#d0d0d0] hover:shadow-gray-300'
-                } ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                    ? 'bg-[#ffd4e0] text-black hover:bg-[#ffb8cc] hover:shadow-pink-300'
+                    : 'bg-[#e0e0e0] text-black hover:bg-[#d0d0d0] hover:shadow-gray-400'
+                }`}
                 style={{
-                  transitionDelay: `${1200 + index * 100}ms`
+                  animationDelay: `${0.9 + index * 0.1}s`
                 }}
               >
-                {topic}
+                <span className="relative z-10">{topic}</span>
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
               </button>
             ))}
           </div>

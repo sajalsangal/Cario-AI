@@ -127,21 +127,21 @@ const AIHRInterviewContent = ({ apiKey }) => {
   };
 
   return (
-    <div className={`bg-white border-2 border-black rounded-2xl p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 opacity-100 translate-y-0`} style={{ transitionDelay: '700ms' }}>
-      <h1 className="text-3xl font-bold mb-4 text-gray-700 text-center">
+    <div className={`bg-white border-2 border-black rounded-2xl p-4 sm:p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left`}>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-700 text-center animate-fade-in">
         🎙️ Practice Communication With AI
       </h1>
-      <h3 className='text-center text-gray-500'>Let our AI help you to overcome your fear of interview and prepare you to speak more clearly and confidently.</h3>
-      <p className=" text-sm mb-4 text-indigo-600 text-center font-bold">
+      <h3 className='text-center text-sm sm:text-base text-gray-500 mb-2 animate-slide-in-right' style={{ animationDelay: '0.2s' }}>Let our AI help you to overcome your fear of interview and prepare you to speak more clearly and confidently.</h3>
+      <p className="text-xs sm:text-sm mb-4 text-indigo-600 text-center font-bold animate-fade-in" style={{ animationDelay: '0.3s' }}>
         Use Chrome Browser on desktop / android and have a proper microphone setup.<br />
         Speak Slowly and Clearly, without taking pause.
       </p>
 
-      <div className='text-center w-full space-x-10 mb-4'>
+      <div className='flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 animate-slide-in-up' style={{ animationDelay: '0.4s' }}>
         <select
           value={interviewType}
           onChange={(e) => setInterviewType(e.target.value)}
-          className="px-6 py-3 text-black rounded-sm text-base focus:outline-none ring-1 ring-black cursor-pointer"
+          className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 text-black rounded-lg text-sm sm:text-base focus:outline-none ring-1 ring-black cursor-pointer hover:bg-gray-50 transition-colors duration-200"
         >
           <option value="HR">HR Interview</option>
           <option value="Technical">Technical Interview</option>
@@ -150,29 +150,29 @@ const AIHRInterviewContent = ({ apiKey }) => {
 
         <button
           onClick={fetchQuestion}
-          className="bg-[#e85d75] hover:bg-[#d94967] text-white px-8 py-3 rounded-lg text-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          className="w-full sm:w-auto bg-[#e85d75] hover:bg-[#d94967] text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-base sm:text-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap"
         >
           {loading ? "Generating..." : "Generate Question"}
         </button>
       </div>
       {question && (
-        <div className="bg-white shadow p-4 rounded w-full mb-4 border-black">
-          <p className="font-semibold">Question:</p>
-          <p>{question}</p>
+        <div className="bg-white shadow-md p-4 rounded-lg w-full mb-4 border border-gray-300 animate-slide-in-left">
+          <p className="font-semibold text-gray-800 mb-2">Question:</p>
+          <p className="text-sm sm:text-base text-gray-700">{question}</p>
         </div>
       )}
 
-      <div className="flex gap-7 mb-4 w-full justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-7 mb-4 w-full justify-center animate-slide-in-right" style={{ animationDelay: '0.2s' }}>
         <button
           onClick={startListening}
           disabled={isListening}
-          className="px-4 py-2 bg-green-600 text-white rounded text-xl"
+          className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-2 bg-green-600 text-white rounded-lg text-base sm:text-xl font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           🎙️ Speak
         </button>
         <button
           onClick={stopListening}
-          className="px-4 py-2 bg-red-500 text-white rounded text-xl"
+          className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-2 bg-red-500 text-white rounded-lg text-base sm:text-xl font-semibold hover:bg-red-600 transition-all duration-300 hover:scale-105 active:scale-95"
         >
           ⏹️ Stop
         </button>
@@ -181,22 +181,24 @@ const AIHRInterviewContent = ({ apiKey }) => {
       <textarea
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
+        className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base animate-slide-in-up"
+        style={{ animationDelay: '0.3s' }}
         rows={3}
         placeholder="Your transcript will appear here. Type the answer if microphone is not working..."
       />
 
       <button
         onClick={getFeedback}
-        className="justify-center w-full bg-[#e85d75] hover:bg-[#d94967] text-white px-8 py-3 rounded-lg text-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+        className="justify-center w-full bg-[#e85d75] hover:bg-[#d94967] text-white px-6 sm:px-8 py-3 rounded-lg text-base sm:text-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 animate-slide-in-up"
+        style={{ animationDelay: '0.4s' }}
       >
         {generateFeedback ? "Generating..." : "🧠 Get Feedback"}
       </button>
 
       {feedback && (
-        <div className="bg-white shadow-md shadow-gray-500 p-4 rounded w-full mt-4">
-          <p className="font-semibold text-green-700">Feedback:</p>
-          <p>{feedback}</p>
+        <div className="bg-white shadow-md shadow-gray-500 p-4 rounded-lg w-full mt-4 border border-gray-200 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          <p className="font-semibold text-green-700 mb-2 animate-fade-in">Feedback:</p>
+          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-line animate-fade-in" style={{ animationDelay: '0.2s' }}>{feedback}</p>
         </div>
       )}
     </div>

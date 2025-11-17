@@ -84,29 +84,30 @@ const AIMockQuizContent = ({apiKey}) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className={`bg-white border-2 border-[#4db8e8] rounded-2xl p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 opacity-100 translate-y-0`} style={{ transitionDelay: '700ms' }}>
-        <h1 className="text-3xl font-bold mb-4 text-gray-800 text-center">
+      <div className={`bg-white border-2 border-[#4db8e8] rounded-2xl p-4 sm:p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left`}>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center animate-fade-in">
           AI Mock Quiz
         </h1>
 
         {stage === "intro" && (
           <>
-            <p className="text-gray-600 mb-6 text-center">
+            <p className="text-sm sm:text-base text-gray-600 mb-6 text-center animate-slide-in-right" style={{ animationDelay: '0.2s' }}>
               Paste your Job Description and get personalized AI interview questions.
             </p>
 
             <textarea
-              className="w-full h-40 p-4 rounded-lg border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm mb-4"
+              className="w-full h-40 p-4 rounded-lg border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm mb-4 animate-slide-in-up"
+              style={{ animationDelay: '0.3s' }}
               placeholder="Paste Job Description here..."
               value={jobDesc}
               onChange={(e) => setJobDesc(e.target.value)}
             />
 
-            <div className="flex justify-center">
+            <div className="flex justify-center animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
               <button
                 onClick={generateQuestions}
                 disabled={loading}
-                className={`bg-[#e85d75] hover:bg-[#d94967] text-white px-16 py-5 rounded-lg text-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 ${loading
+                className={`bg-[#e85d75] hover:bg-[#d94967] text-white px-10 sm:px-16 py-4 sm:py-5 rounded-lg text-lg sm:text-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 ${loading
                   ? "cursor-not-allowed"
                   : ""
                   }`}
@@ -119,13 +120,14 @@ const AIMockQuizContent = ({apiKey}) => {
 
         {stage === "questions" && questions.length > 0 && (
           <div className="mt-4">
-            <p className="text-gray-700 mb-4">
+            <p className="text-sm sm:text-base text-gray-700 mb-4 animate-slide-in-left">
               <span className="font-semibold">Question {currentIndex + 1}:</span>{" "}
               {questions[currentIndex]}
             </p>
 
             <textarea
-              className="w-full h-32 p-3 rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+              className="w-full h-32 p-3 rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 animate-slide-in-right"
+              style={{ animationDelay: '0.2s' }}
               placeholder="Type your answer here..."
               value={currentAnswer}
               onChange={(e) => setCurrentAnswer(e.target.value)}
@@ -135,30 +137,32 @@ const AIMockQuizContent = ({apiKey}) => {
               <button
                 onClick={getFeedback}
                 disabled={loading}
-                className={`w-full py-2 rounded-lg text-white font-medium ${loading
+                className={`w-full py-3 rounded-lg text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 animate-slide-in-up ${loading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-green-600 hover:bg-green-700"
                   }`}
+                style={{ animationDelay: '0.3s' }}
               >
                 {loading ? "Checking..." : "Get Feedback"}
               </button>
             ) : (
               <>
-                <div className="mt-4 bg-yellow-100 border border-yellow-300 rounded-lg p-4">
-                  <h3 className="font-semibold mb-2 text-gray-800">AI Feedback:</h3>
-                  <p className="text-gray-700 whitespace-pre-line">{feedback}</p>
+                <div className="mt-4 bg-yellow-100 border border-yellow-300 rounded-lg p-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                  <h3 className="font-semibold mb-2 text-gray-800 animate-fade-in">AI Feedback:</h3>
+                  <p className="text-sm sm:text-base text-gray-700 whitespace-pre-line animate-fade-in" style={{ animationDelay: '0.2s' }}>{feedback}</p>
                 </div>
 
                 {currentIndex < questions.length - 1 ? (
                   <button
                     onClick={nextQuestion}
-                    className="w-full mt-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                    className="w-full mt-4 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 hover:scale-105 active:scale-95 animate-slide-in-up"
+                    style={{ animationDelay: '0.3s' }}
                   >
                     Next Question →
                   </button>
                 ) : (
-                  <p className="text-center mt-4 font-semibold text-green-700">
-                    🎉 You’ve completed all questions!
+                  <p className="text-center mt-4 font-semibold text-green-700 text-base sm:text-lg animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                    🎉 You've completed all questions!
                   </p>
                 )}
               </>
