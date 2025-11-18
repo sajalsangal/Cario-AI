@@ -19,7 +19,7 @@ const Navbar = () => {
   }, []);
 
   const menuItems = [
-    { id: "home", label: "HomePage", to: "/" },
+    { id: "home", label: "Home", to: "/" },
     { id: "uploadResume", label: "About Us", to: "/about-us" },
     { id: "dashboard", label: "Dashboard", to: "/dashboard" },
     { id: "aiNews", label: "Daily News", to: "/ai-news" },
