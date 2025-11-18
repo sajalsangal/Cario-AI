@@ -5,7 +5,7 @@ import ATSReviewContent from './ATSReviewContent'
 import AIMockQuizContent from './AIMockQuizContent'
 import AIHRInterviewContent from './AIHRInterviewContent'
 
-const backend = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const backend = import.meta.env.VITE_BACKEND_URL || "https://cario-ai.onrender.com";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('job-fetch')
