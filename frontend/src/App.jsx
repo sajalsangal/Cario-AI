@@ -18,12 +18,13 @@ function ScrollToTop() {
   return null;
 }
 
-useEffect(() => {
+
+export default function App() {
+
+  useEffect(() => {
     fetch("https://your-backend.onrender.com/");
 }, []);
 
-
-export default function App() {
   return (
     <Router>
       <ScrollToTop />
