@@ -56,10 +56,10 @@ const HomePage = () => {
                 </span>
 
               </h1>
-              <h2 className="text-[1.6rem] md:text-[3.25rem] font-sans text-[#e85d75] leading-[1.05] tracking-tight relative text-center md:text-left">
+              <h2 className="text-3xl md:text-[3.25rem] font-sans text-[#e85d75] leading-[1.05] tracking-tight relative text-center md:text-left">
                 Instantly with AI..
               </h2>
-              <p className="text-[1.2rem] md:text-[1.3rem] text-black italic pt-3 leading-tight tracking-tight text-center md:text-left">
+              <p className="text-2xl md:text-2xl text-black italic pt-3 leading-tight tracking-tight text-center md:text-left">
                 One Stop Solution To All Your Job Related Needs !
               </p>
 
@@ -81,7 +81,7 @@ const HomePage = () => {
           </div>
 
           {/* Right Side - 3D Hexagon - Pixel Perfect from Screenshot */}
-          <div className="relative h-[300px] flex items-center justify-center">
+          <div className="relative h-[200px] flex items-center justify-center">
 
           </div>
         </div>
@@ -149,11 +149,11 @@ const HomePage = () => {
       </div>
 
       {/* New Section - Job Seekers Quote with Interactive Effects */}
-      <div className="relative bg-[#c9a8f5] py-24">
+      <div className="relative bg-[#c9a8f5] py-8 md:py-14">
         {/* Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-12 text-center">
           {/* Quote Text with Hover Effect */}
-          <div className="space-y-8">
+          <div className="space-y-1">
             <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight group">
               <span className="inline-block">
                 " Job seekers spend countless hours
@@ -170,7 +170,7 @@ const HomePage = () => {
             </h2>
 
             {/* Down Arrow Icon with Animation */}
-            <div className="flex justify-center py-6">
+            <div className="flex justify-center py-10">
               <div className="w-16 h-16 border-4 border-white rounded-full flex items-center justify-center animate-bounce hover:scale-110 transition-transform duration-300 cursor-pointer">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -179,11 +179,11 @@ const HomePage = () => {
             </div>
 
             {/* Main Heading with Reveal Effect */}
-            <div className="pt-8">
+            <div className="pt-2">
               <h3 className="text-3xl lg:text-4xl font-bold text-black leading-tight">
                 <span className="inline-block transition-all duration-300">
                   Here's how
-                  <span className="transition-all duration-300 hover:scale-105 hover:text-white">
+                  <span className="transition-all duration-300 hover:scale-105 hover:text-red-500 hover:cursor-pointer">
                     {" "}' CarioAI '
                   </span>
                   {" "}changes that with AI
@@ -409,7 +409,7 @@ const HomePage = () => {
         <div className="relative z-10 max-w-6xl mx-auto px-12 pt-16">
           {/* Upload Resume Button */}
           <Link to="/dashboard">
-            <div className="relative flex justify-center mb-16 -top-32">
+            <div className="relative flex justify-center mb-0 -top-32">
               <button className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-12 py-5 rounded-full text-xl md:text-2xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-4">
                 Explore Dashboard
               </button>

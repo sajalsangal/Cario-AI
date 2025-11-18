@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [rawModelText, setRawModelText] = useState('');
   const [jobs, setJobs] = useState([]);
   const [jobTitles, setJobTitles] = useState([]);
-
+  const [showApiKey, setShowApiKey] = useState(false)
   const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState(null)
   const fileInputRef = useRef(null)
@@ -108,41 +108,37 @@ const Dashboard = () => {
         <div className="flex gap-1.5 p-2 px-3">
           <button
             onClick={() => setActiveTab('job-fetch')}
-            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${
-              activeTab === 'job-fetch'
+            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'job-fetch'
                 ? 'bg-[#c9a8f5] text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Job Fetch
           </button>
           <button
             onClick={() => setActiveTab('ats-review')}
-            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${
-              activeTab === 'ats-review'
+            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'ats-review'
                 ? 'bg-[#c9a8f5] text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             ATS Review
           </button>
           <button
             onClick={() => setActiveTab('mock-quiz')}
-            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${
-              activeTab === 'mock-quiz'
+            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'mock-quiz'
                 ? 'bg-[#c9a8f5] text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Mock Quiz (J.D)
           </button>
           <button
             onClick={() => setActiveTab('hr-interview')}
-            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${
-              activeTab === 'hr-interview'
+            className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'hr-interview'
                 ? 'bg-[#c9a8f5] text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             AI HR Interview
           </button>
@@ -255,12 +251,49 @@ const Dashboard = () => {
         {/* API Key Input and Upload Button with Animation */}
         <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 mb-0 animate-fade-in-down`}>
           <input
-            type="password"
+            type= {showApiKey ? 'text' : 'password'}
             placeholder="Enter your Gemini API Key, ex: AIzaSy..."
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-lg text-base sm:text-lg focus:outline-none focus:border-[#e85d75] focus:shadow-lg focus:scale-[1.02] transition-all duration-300 hover:border-[#e85d75]/50"
           />
+
+          {/* Show/Hide Button */}
+          <button
+            type="button"
+            onClick={() => setShowApiKey(!showApiKey)}
+            className="relative md:top-1/2 -translate-y-1/2 text-gray-600 
+               hover:text-gray-800 transition"
+          >
+            {showApiKey ? (
+              // Eye Off Icon
+              <svg xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M3 3l18 18m-6-6a6 6 0 01-8.485-8.485M9.88 9.88a3 3 0 004.242 4.242" />
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M6.228 6.228A11.948 11.948 0 003 12c2 5 7 8 9 8a11.9 11.9 0 005.772-2.228M9.88 9.88L3 3" />
+              </svg>
+            ) : (
+              // Eye Icon
+              <svg xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z" />
+              </svg>
+            )}
+          </button>
+
           <button
             onClick={() => fileInputRef.current?.click()}
             className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 sm:hover:scale-110 active:scale-95 whitespace-nowrap ${selectedFile ? 'bg-green-500 hover:bg-green-600' : 'bg-[#e85d75] hover:bg-[#d94967]'
@@ -290,9 +323,9 @@ const Dashboard = () => {
           {activeTab === 'ats-review' ? (
             <ATSReviewContent apiKey={apiKey} selectedFile={selectedFile} />
           ) : activeTab === 'mock-quiz' ? (
-            <AIMockQuizContent apiKey = {apiKey} />
+            <AIMockQuizContent apiKey={apiKey} />
           ) : activeTab === 'hr-interview' ? (
-            <AIHRInterviewContent apiKey = {apiKey} />
+            <AIHRInterviewContent apiKey={apiKey} />
           ) : (
             <>
 
@@ -352,7 +385,7 @@ const Dashboard = () => {
                   >
                     <option value="true">Remote</option>
                     <option value="false">Both</option>
-                    
+
                   </select>
 
                   {/* Search Button */}
@@ -380,29 +413,29 @@ const Dashboard = () => {
                       if (i === 0) animationClass = 'animate-slide-in-left';
                       else if (i === 1) animationClass = 'animate-slide-in-right';
                       else animationClass = 'animate-slide-in-up';
-                      
+
                       return (
-                      <div key={i} className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-200 hover:shadow-2xl hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-[1.01] sm:hover:scale-[1.02] transition-all duration-300 cursor-pointer ${animationClass}`} style={{ animationDelay: `${i * 0.1}s`, animationFillMode: 'backwards' }}>
+                        <div key={i} className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-200 hover:shadow-2xl hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-[1.01] sm:hover:scale-[1.02] transition-all duration-300 cursor-pointer ${animationClass}`} style={{ animationDelay: `${i * 0.1}s`, animationFillMode: 'backwards' }}>
 
-                        <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">{job.job_title}</h3>
-                        <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">{job.employer_name}</h4>
-                        <p className="text-sm text-gray-600 mb-3 sm:mb-4">{job.job_city || "Remote"}, {job.job_country}</p>
+                          <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">{job.job_title}</h3>
+                          <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">{job.employer_name}</h4>
+                          <p className="text-sm text-gray-600 mb-3 sm:mb-4">{job.job_city || "Remote"}, {job.job_country}</p>
 
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                          <p className="text-xs text-gray-500">{job.job_employment_types[0]} · {job.job_posted_at}</p>
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+                            <p className="text-xs text-gray-500">{job.job_employment_types[0]} · {job.job_posted_at}</p>
 
-                          <a href={job.job_apply_link} target="_blank" className="w-full sm:w-auto">
-                            <button className="group w-full sm:w-auto px-5 sm:px-6 py-2 bg-gradient-to-r from-pink-400 to-pink-500 text-white rounded-lg text-sm font-bold hover:from-pink-500 hover:to-pink-600 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
-                              Apply Now
-                              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                              </svg>
-                            </button>
-                          </a>
+                            <a href={job.job_apply_link} target="_blank" className="w-full sm:w-auto">
+                              <button className="group w-full sm:w-auto px-5 sm:px-6 py-2 bg-gradient-to-r from-pink-400 to-pink-500 text-white rounded-lg text-sm font-bold hover:from-pink-500 hover:to-pink-600 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+                                Apply Now
+                                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                              </button>
+                            </a>
+                          </div>
+                          <p className="text-xs text-gray-700 mt-2 sm:mb-4">Fetched from: {job.job_publisher}</p>
+
                         </div>
-                        <p className="text-xs text-gray-700 mt-2 sm:mb-4">Fetched from: {job.job_publisher}</p>
-
-                      </div>
                       );
                     })}
 
