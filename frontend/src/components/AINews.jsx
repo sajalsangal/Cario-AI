@@ -17,6 +17,7 @@ const AINews = () => {
     document.title = "Daily News - CarioAI"
     const fetchNews = async () => {
       try {
+        console.log("NEWS API KEY:", import.meta.env.VITE_NEWS_API_KEY); //temporary
         const res = await fetch(URL);
         const data = await res.json();
         setNews(data.articles || []);

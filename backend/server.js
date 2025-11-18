@@ -109,8 +109,9 @@ app.post("/fetch-jobs", async (req, res) => {
     const prompt = `
 Skills: ${skills.join(", ")}
 
-Return EXACTLY 3 real-world job titles based on the provided skills in JSON array.
-Ex: ["Data Analyst", "Software Engineer", "Product Manager]
+Return EXACTLY 3 real-world job titles in JSON array only.
+
+["Data Analyst", "Backend Developer", "ML Engineer"]
 `;
 
     const gemResp = await axios.post(
