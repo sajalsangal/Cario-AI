@@ -312,7 +312,7 @@ const Dashboard = () => {
 
         {/* Info Text with Animation */}
         <p className={`text-xs sm:text-sm text-gray-600 text-center sm:text-left animate-fade-in`}>
-          Create your own Gemini API key from <a href="https://aistudio.google.com/api-keys" target="_blank" className="font-semibold underline text-green-500 hover:text-[#e85d75] transition-colors duration-300">Google AI Studio</a>. <a href="#" className=" font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300">Watch Video</a> to learn more.
+          Create your own Gemini API key from <a href="https://aistudio.google.com" target="_blank" className="font-semibold underline text-green-500 hover:text-[#e85d75] transition-colors duration-300">Google AI Studio</a>. <a href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce" target="_blank" className=" font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300">Watch Video</a> to learn more.
           <br />
           <b>We do not store your api key.</b>
         </p>
