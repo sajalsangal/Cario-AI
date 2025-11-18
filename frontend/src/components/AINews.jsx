@@ -7,8 +7,8 @@ const AINews = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_KEY = "fae339e545184d04940612ef5c47c993"; // 
-  const URL = `https://newsapi.org/v2/everything?q=artificial+intelligence&language=en&sortBy=publishedAt&pageSize=8&apiKey=${API_KEY}`;
+  const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY
+  const URL = `https://newsapi.org/v2/everything?q=artificial+intelligence&language=en&sortBy=publishedAt&pageSize=8&apiKey=${NEWS_API_KEY}`;
 
 
   useEffect(() => {

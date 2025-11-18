@@ -23,55 +23,49 @@ const Dashboard = () => {
   const [showApiKey, setShowApiKey] = useState(false)
   const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState(null)
-  const fileInputRef = useRef(null)
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const fileInputRef = useRef(null)
 
-  const handleFileSelect = async (e) => {
+  const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return setError("Please select a PDF first.");
+    if (!file) return;
 
-    const fileName = file.name.toLowerCase();
-    if (!fileName.endsWith(".pdf")) {
-      alert("Please upload a PDF file only.");
-      e.target.value = "";   // reset file input
-      return;                // ⛔ stop execution
+    const name = file.name.toLowerCase();
+    if (!name.endsWith(".pdf")) {
+      alert("Upload a PDF only.");
+      e.target.value = "";
+      return;
     }
+
+    setSelectedFile(file);
+  };
+
+
+  const fetchJobs = async () => {
+    if (!apiKey.trim()) {
+      alert("Enter a valid Gemini API Key");
+      return;
+    }
+
+    if (!fileInputRef.current?.files[0]) {
+      alert("Upload a resume PDF first");
+      return;
+    }
+
     try {
       setError("");
       setLoading(true);
+
+      const file = fileInputRef.current.files[0];
 
       const formData = new FormData();
       formData.append("resume", file);
-
-      const res = await axios.post(`${backend}/upload-resume`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setSelectedFile(res.data.fileName);
-      console.log("File parsed successfully")
-    } catch (err) {
-      setError("Upload failed.");
-    } finally {
-      setLoading(false);
-    }
-
-  }
-
-  const fetchJobs = async () => {
-    if (!apiKey || apiKey == '') {
-      alert("Enter a valid gemini api key.");
-      return;
-    }
-    if (!selectedFile) {
-      alert("Upload a resume in pdf file format.")
-      return;
-    }
-    try {
-      setError("");
-      setLoading(true);
+      formData.append("apiKey", apiKey);
 
       // Extract skills from resume
-      const skillRes = await axios.post(`${backend}/extract-skills`, {
-        apiKey
+      const skillRes = await axios.post(`${backend}/extract-skills`, formData , {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setSkills(skillRes.data.skills);
       setRawModelText(skillRes.data.raw);
@@ -109,8 +103,8 @@ const Dashboard = () => {
           <button
             onClick={() => setActiveTab('job-fetch')}
             className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'job-fetch'
-                ? 'bg-[#c9a8f5] text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-[#c9a8f5] text-white shadow-lg'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Job Fetch
@@ -118,8 +112,8 @@ const Dashboard = () => {
           <button
             onClick={() => setActiveTab('ats-review')}
             className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'ats-review'
-                ? 'bg-[#c9a8f5] text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-[#c9a8f5] text-white shadow-lg'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             ATS Review
@@ -127,8 +121,8 @@ const Dashboard = () => {
           <button
             onClick={() => setActiveTab('mock-quiz')}
             className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'mock-quiz'
-                ? 'bg-[#c9a8f5] text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-[#c9a8f5] text-white shadow-lg'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Mock Quiz (J.D)
@@ -136,8 +130,8 @@ const Dashboard = () => {
           <button
             onClick={() => setActiveTab('hr-interview')}
             className={`px-3 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all duration-300 flex-1 ${activeTab === 'hr-interview'
-                ? 'bg-[#c9a8f5] text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-[#c9a8f5] text-white shadow-lg'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             AI HR Interview
@@ -251,7 +245,7 @@ const Dashboard = () => {
         {/* API Key Input and Upload Button with Animation */}
         <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 mb-0 animate-fade-in-down`}>
           <input
-            type= {showApiKey ? 'text' : 'password'}
+            type={showApiKey ? 'text' : 'password'}
             placeholder="Enter your Gemini API Key, ex: AIzaSy..."
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}

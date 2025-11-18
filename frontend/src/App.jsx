@@ -22,7 +22,7 @@ function ScrollToTop() {
 export default function App() {
 
   useEffect(() => {
-    fetch("https://your-backend.onrender.com/");
+    fetch("https://cario-ai.onrender.com/");
 }, []);
 
   return (

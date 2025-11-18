@@ -1,4 +1,3 @@
-// backend/server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -8,178 +7,128 @@ const pdfParse = require("pdf-parse");
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: "20mb" }));
+app.use(express.json({ limit: "50mb" }));
 
-// ---- Storage for uploaded resume (stored in RAM) ----
-let uploadedResumeBuffer = null;
-
-// ---- Multer setup ----
+// Multer – store files temporarily in memory
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
 });
 
-// ---- ENV Variables ----
+// ENV
 const PORT = process.env.PORT || 5000;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
-// ========================
-// 1️⃣ UPLOAD RESUME FILE
-// ========================
-app.post("/upload-resume", upload.single("resume"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No PDF uploaded" });
-  }
-
-  uploadedResumeBuffer = req.file.buffer;
-
-  return res.json({
-    success: true,
-    message: "Resume uploaded successfully",
-    fileName: req.file.originalname,
-  });
-});
-
-// ==============================
-// 2️⃣ EXTRACT SKILLS FROM RESUME
-// ==============================
-app.post("/extract-skills", async (req, res) => {
+/* ============================================================
+   1️⃣  EXTRACT SKILLS DIRECTLY FROM UPLOADED FILE
+============================================================ */
+app.post("/extract-skills", upload.single("resume"), async (req, res) => {
   try {
-    const {apiKey} = req.body;
-    if (!uploadedResumeBuffer) {
-      console.log("Enter a resume in pdf format");
-      return res.status(400).json({ error: "No resume uploaded yet" });
-    }
+    const { apiKey } = req.body;
 
-    // Parse text using pdf-parse
-    const parsed = await pdfParse(uploadedResumeBuffer);
+    if (!req.file)
+      return res.status(400).json({ error: "No PDF uploaded" });
+
+    const parsed = await pdfParse(req.file.buffer);
     const resumeText = parsed.text.trim();
+    if (!resumeText)
+      return res.status(400).json({ error: "Failed to read PDF" });
 
-    if (!resumeText) {
-      return res
-        .status(400)
-        .json({ error: "Failed to extract text from PDF" });
-    }
-
-    // Gemini prompt
     const prompt = `
 Extract ONLY the skills from the following resume.
 Return strictly a JSON array.
 
-Example:
-["Python", "SQL", "Machine Learning"]
-
-Resume:
-"""${resumeText}"""
+Resume Text:
+"""
+${resumeText}
+"""
 `;
 
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
-    const gemResp = await axios.post(
-      url,
-      {
-        contents: [{ parts: [{ text: prompt }] }],
-      },
+    const gemResp = await axios.post(url,
+      { contents: [{ parts: [{ text: prompt }] }] },
       { timeout: 30000 }
     );
 
-    let rawText =
-      gemResp.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    let rawText = gemResp.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-    // Parse skills
     let skills = [];
-    try {
-      skills = JSON.parse(rawText);
-    } catch {
+    try { skills = JSON.parse(rawText); }
+    catch {
       skills = rawText
         .split(/,|\n/)
-        .map((s) => s.replace(/[\[\]"]/g, "").trim())
+        .map(s => s.replace(/[\[\]"]/g, "").trim())
         .filter(Boolean);
     }
 
-    skills = [...new Set(skills)];
-
-    return res.json({ success: true, skills, raw: rawText });
+    return res.json({ success: true, skills });
   } catch (err) {
-    console.error("Error in extract-skills:", err);
+    console.error(err);
     return res.status(500).json({ error: "Skill extraction failed" });
   }
 });
 
-// =======================
-// 3️⃣ FETCH MATCHING JOBS
-// =======================
+/* ============================================================
+   2️⃣  FETCH JOBS BASED ON EXTRACTED SKILLS
+============================================================ */
 app.post("/fetch-jobs", async (req, res) => {
-  const employmentMap = {
-  "Fulltime": "FULLTIME",
-  "Part-time": "PARTTIME",
-  "Contract": "CONTRACTOR",
-  "Internship": "INTERN",
-  "all-types": ''
-};
-
-const timeframeMap = {
-  "Today": "today",
-  "Three Days": "3days",
-  "This Week": "week",
-  "This Month": "month",
-  "All time": "all"
-};
-
-const experienceMap = {
-  "No_experience": "no_experience",
-  "Entry Level": "under_3_years_experience",
-  "Mid Level": "more_than_3_years_experience",
-  "No Degree": "no_degree",
-  "all-experience" : ''
-};
-
-const remoteMap = {
-  "true" : true,
-  "false" : false
-}
-
   try {
     const { apiKey, skills, fulltime, timeframe, experience, remotework } = req.body;
-    const employmentType = employmentMap[fulltime] || "FULLTIME";
-    const datePosted = timeframeMap[timeframe] || "all";
-    const expValue = experienceMap[experience] || undefined;
-    const remoteVal = remoteMap[remotework] || false;
 
-    if (!skills?.length) {
-      
-      return res
-        .status(400)
-        .json({ error: "No skills provided to fetch jobs" });
-    }
+    if (!skills || skills.length === 0)
+      return res.status(400).json({ error: "No skills provided" });
+
+    const employmentMap = {
+      "Fulltime": "FULLTIME",
+      "Part-time": "PARTTIME",
+      "Contract": "CONTRACTOR",
+      "Internship": "INTERN",
+      "all-types": ""
+    };
+
+    const timeframeMap = {
+      "Today": "today",
+      "Three Days": "3days",
+      "This Week": "week",
+      "This Month": "month",
+      "All time": "all"
+    };
+
+    const experienceMap = {
+      "No_experience": "no_experience",
+      "Entry Level": "under_3_years_experience",
+      "Mid Level": "more_than_3_years_experience",
+      "No Degree": "no_degree",
+      "all-experience": ""
+    };
+
+    const remoteMap = { "true": true, "false": false };
 
     // Ask Gemini for job titles
     const prompt = `
 Skills: ${skills.join(", ")}
 
-Return EXACTLY 3 real-world job titles in JSON array only.
-
-["Data Analyst", "Backend Developer", "ML Engineer"]
+Return EXACTLY 3 real-world job titles based on the provided skills in JSON array.
+Ex: ["Data Analyst", "Software Engineer", "Product Manager]
 `;
 
     const gemResp = await axios.post(
       `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-      {
-        contents: [{ parts: [{ text: prompt }] }],
-      }
+      { contents: [{ parts: [{ text: prompt }] }] }
     );
 
     let jobText =
       gemResp.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
     jobText = jobText.replace(/```json|```/g, "").trim();
 
     let jobTitles = [];
-    try {
-      jobTitles = JSON.parse(jobText);
-    } catch {
+    try { jobTitles = JSON.parse(jobText); }
+    catch {
       jobTitles = jobText
         .split(/,|\n/)
-        .map((t) => t.replace(/[\[\]"]/g, "").trim())
+        .map(t => t.replace(/[\[\]"]/g, "").trim())
         .filter(Boolean);
     }
 
@@ -193,11 +142,10 @@ Return EXACTLY 3 real-world job titles in JSON array only.
         query,
         num_pages: 1,
         country: "in",
-        date_posted: datePosted,
-        employment_types: employmentType,
-        job_requirements: expValue,
-        work_from_home : remoteVal
-
+        date_posted: timeframeMap[timeframe],
+        employment_types: employmentMap[fulltime],
+        job_requirements: experienceMap[experience],
+        work_from_home: remoteMap[remotework]
       },
       headers: {
         "X-RapidAPI-Key": process.env.JSEARCH_API_KEY,
@@ -205,33 +153,24 @@ Return EXACTLY 3 real-world job titles in JSON array only.
       },
     });
 
-    return res.json({
-      jobTitles,
-      jobs: jResp.data?.data || [],
-    });
+    return res.json({ jobTitles, jobs: jResp.data?.data || [] });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Job fetch failed" });
   }
 });
 
-app.post("/analyze-resume", async (req, res) => {
+/* ============================================================
+   3️⃣  ATS REVIEW — PDF INCLUDED IN SAME REQUEST
+============================================================ */
+app.post("/analyze-resume", upload.single("resume"), async (req, res) => {
   try {
     const { apiKey, jobDesc } = req.body;
+    if (!req.file)
+      return res.status(400).json({ error: "No PDF uploaded" });
 
-    if (!uploadedResumeBuffer) {
-      console.log("Enter a resume in pdf format");
-      return res.status(400).json({ error: "No resume uploaded yet" });
-    }
-
-    const parsed1 = await pdfParse(uploadedResumeBuffer);
-    const resumeText = parsed1.text.trim();
-
-    if (!resumeText) {
-      return res
-        .status(400)
-        .json({ error: "Failed to extract text from PDF" });
-    }
+    const parsed = await pdfParse(req.file.buffer);
+    const resumeText = parsed.text.trim();
 
     const prompt = `
 You are an advanced Applicant Tracking System (ATS).
@@ -254,43 +193,22 @@ Resume Text:
 
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
-    const body = {
-      contents: [{ parts: [{ text: prompt }] }],
-    };
-
-    const response = await axios.post(url, body, {
-      headers: { "Content-Type": "application/json" },
-      timeout: 40000,
+    const resp = await axios.post(url, {
+      contents: [{ parts: [{ text: prompt }] }]
     });
 
-    // Extract raw model output
-    let rawText =
-      response?.data?.candidates?.[0]?.content?.parts
-        ?.map((p) => p.text)
-        .join("\n") || "";
+    let raw = resp.data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") || "";
 
-    // 🧼 Clean Gemini formatting (remove markdown or ```json)
-    rawText = rawText
-      .replace(/```json/gi, "")
-      .replace(/```/g, "")
-      .replace(/^\s+|\s+$/g, "");
+    raw = raw.replace(/```json|```/g, "").trim();
 
-    // Try parsing JSON output safely
-    let parsed = {};
-    try {
-      parsed = JSON.parse(rawText);
-    } catch (err) {
-      console.warn("⚠️ Could not parse JSON. Returning raw output.");
-      parsed = { rawText };
-    }
+    let parsedJson;
+    try { parsedJson = JSON.parse(raw); }
+    catch { parsedJson = { raw }; }
 
-    return res.json({ success: true, feedback: parsed });
-  } catch (error) {
-    console.error("❌ Error analyzing resume:", error?.response?.data || error.message);
-    return res.status(500).json({
-      error: "Failed to analyze resume",
-      details: error.message,
-    });
+    return res.json({ success: true, feedback: parsedJson });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "ATS review failed" });
   }
 });
 

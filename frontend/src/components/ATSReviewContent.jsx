@@ -4,41 +4,41 @@ import axios from 'axios';
 
 // ATS Review Content Component
 const ATSReviewContent = ({ apiKey, selectedFile }) => {
-
-  const [resumeContent, setResumeContent] = useState(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [resumeContent, setResumeContent] = useState(null);
   const [jobDesc, setJobDesc] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
+  useEffect(() => { }, []);
 
-  const handleAnalyze = async (e) => {
-    if (!apiKey) {
-      alert('Please enter your Gemini API Key.')
-      return
-    }
+  const handleAnalyze = async () => {
+    if (!apiKey) return alert("Enter your Gemini API Key.");
+    if (!selectedFile) return alert("Upload your resume first.");
 
-    if (!selectedFile){
-      return alert('Select a pdf resume first.')
-    }
-    setIsAnalyzing(true)
+    setIsAnalyzing(true);
 
     try {
+      const formData = new FormData();
+      formData.append("resume", selectedFile);   // ⬅ attach resume pdf
+      formData.append("apiKey", apiKey);
+      formData.append("jobDesc", jobDesc);
+
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/analyze-resume`,
-        { apiKey, jobDesc }
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" }
+        }
       );
+
       setResumeContent(res.data.feedback);
     } catch (err) {
       console.error(err);
       setResumeContent({ error: "Failed to analyze resume" });
-    }finally{
-      setIsAnalyzing(false)
+    } finally {
+      setIsAnalyzing(false);
     }
+  };
 
-  }
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -88,7 +88,7 @@ const ATSReviewContent = ({ apiKey, selectedFile }) => {
             )}
           </button>
         </div>
-        <ATSFeedback feedback = {resumeContent}/>
+        <ATSFeedback feedback={resumeContent} />
       </div>
     </div>
   )
