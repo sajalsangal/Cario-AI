@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Footer from "./Footer";
 
 const AboutUs = () => {
   const [visibleBoxes, setVisibleBoxes] = useState([]);
@@ -452,6 +453,7 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
