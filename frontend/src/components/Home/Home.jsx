@@ -37,9 +37,10 @@ const HomePage = () => {
             />
             {/* Content - Exact Typography */}
             <div className="relative z-10 space-y-3 md:space-y-2 top-14 md:top-28 md:left-28">
-              <h1 className="text-[3rem] md:text-[3.75rem] font-bold text-black leading-[1.05] tracking-normal text-center md:text-left">
+              <h1 className="text-[3.5rem] md:text-[3.75rem] font-bold text-black leading-[1.05] tracking-normal text-center md:text-left">
                 Find Your
-                <span className="text-[#e85d75]">
+                <br className='md:hidden' />
+                <span className="text-red-600 text-[2.7rem] md:text-[3.75rem]">
                   <TypeAnimation
                     sequence={[
                       ' Perfect Job', 2000,
@@ -49,29 +50,29 @@ const HomePage = () => {
                       ' Mock Quiz', 2000,
                     ]}
                     wrapper="span"
-                    speed={50}
+                    speed={30}
                     repeat={Infinity}
                     cursor={true}
                   />
                 </span>
 
               </h1>
-              <h2 className="text-3xl md:text-[3.25rem] font-sans text-[#e85d75] leading-[1.05] tracking-tight relative text-center md:text-left">
-                Instantly with AI..
+              <h2 className="text-[2.2rem] pt-2 md:text-[3.25rem] font-semibold font-sans text-[#e85d75] leading-[1.05] tracking-tight relative text-center md:text-left">
+                Instantly with AI
               </h2>
-              <p className="text-2xl md:text-2xl text-black italic pt-3 leading-tight tracking-tight text-center md:text-left">
+              <p className="text-2xl md:text-2xl text-black pt-2 leading-tight tracking-tight text-center md:text-left">
                 One Stop Solution To All Your Job Related Needs !
               </p>
 
               {/* Buttons - Exact Styling */}
               <div className="flex flex-col md:flex-row gap-5 pt-20 justify-center md:justify-start text-center">
                 <Link to="/dashboard">
-                  <button className="bg-black text-white px-12 py-4 text-[1.1rem] font-bold hover:bg-gray-800 transition-all h-16">
+                  <button className="bg-black text-white px-12 py-4 text-[1.5rem] font-bold hover:bg-gray-800 transition-all h-16">
                     Dashboard
                   </button>
                 </Link>
                 <a href="#video">
-                  <button className="border-2 border-[#c9a8f5] bg-[#e8d9f9] text-black px-12 py-4 text-[1.1rem] font-semibold hover:bg-[#d4b5f7] transition-all rounded-xl h-16">
+                  <button className="border-2 border-[#c9a8f5] bg-[#e8d9f9] text-black px-12 py-4 text-[1.3rem] font-semibold hover:bg-[#d4b5f7] transition-all rounded-xl h-18">
                     Watch Video
                   </button>
                 </a>
@@ -99,10 +100,10 @@ const HomePage = () => {
         {/* Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-12 pt-16">
           <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold text-white mb-4">
+            <p className="text-[3rem] md:text-[4rem] font-bold text-white mb-4 leading-tight" >
               See CarioAI in action
-            </h2>
-            <p className="text-xl text-white/90">
+            </p>
+            <p className="text-xl md:text-[2rem] text-white/90 text-justify md:text-center">
               Watch how our AI-powered platform transforms your job search experience in seconds
             </p>
           </div>
@@ -154,15 +155,15 @@ const HomePage = () => {
         <div className="relative z-10 max-w-6xl mx-auto px-12 text-center">
           {/* Quote Text with Hover Effect */}
           <div className="space-y-1">
-            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight group">
+            <h2 className="text-[2.2rem] md:text-5xl font-bold text-white leading-tight group">
               <span className="inline-block">
-                " Job seekers spend countless hours
+                Job seekers spend countless hours
               </span>
               <br />
               <span className="inline-block ">
-                searching for roles that
+                searching for roles that <br className='md:hidden'/> "
                 <span className=" text-red-500 transition-all duration-300 hover:scale-110 hover:text-red-400 font-extrabold">
-                  {" "} don't fit
+                   {' '}Don't Fit
                 </span>
                 {" "}"
 
@@ -180,11 +181,11 @@ const HomePage = () => {
 
             {/* Main Heading with Reveal Effect */}
             <div className="pt-2">
-              <h3 className="text-3xl lg:text-4xl font-bold text-black leading-tight">
+              <h3 className="text-[2.5rem] md:text-5xl font-bold text-black leading-tight">
                 <span className="inline-block transition-all duration-300">
                   Here's how
-                  <span className="transition-all duration-300 hover:scale-105 hover:text-red-500 hover:cursor-pointer">
-                    {" "}' CarioAI '
+                  <span className="transition-all duration-300 hover:scale-105 hover:text-gray-100 hover:cursor-pointer">
+                    {" "} 'CarioAI'
                   </span>
                   {" "}changes that with AI
 
@@ -409,8 +410,8 @@ const HomePage = () => {
         <div className="relative z-10 max-w-6xl mx-auto px-12 pt-16">
           {/* Upload Resume Button */}
           <Link to="/dashboard">
-            <div className="relative flex justify-center mb-0 -top-32">
-              <button className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-12 py-5 rounded-full text-xl md:text-2xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-4">
+            <div className="relative flex justify-center -top-32">
+              <button className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-12 py-5 rounded-full text-2xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-4">
                 Explore Dashboard
               </button>
             </div>
@@ -418,7 +419,7 @@ const HomePage = () => {
 
           {/* Heading */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white">
+            <h2 className="text-5xl md:text-6xl font-bold text-white">
               Our Peer Reviews
             </h2>
           </div>
@@ -689,7 +690,7 @@ const BottomCTASection = () => {
   return (
     <div className="relative bg-white py-16" ref={ref}>
       <div className="max-w-7xl mx-auto px-12 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-black leading-tight">
+        <h2 className="text-[2.1rem] md:text-5xl font-bold text-black leading-tight">
           {/* First Line */}
           <div className="inline-block">
             {line1Words.map((word, index) => (
@@ -777,7 +778,7 @@ const FAQSection = () => {
   }
 
   return (
-    <div className="relative bg-[#c9a8f5] pt-12 pb-24" ref={ref}>
+    <div className="relative bg-[#c9a8f5] pt-0 pb-24" ref={ref}>
       <div className="max-w-5xl mx-auto px-12">
         {/* FAQ Icon and Heading - Animated */}
         <motion.div

@@ -13,7 +13,7 @@ const Navbar = () => {
 
   // Detect scroll for background blur
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -38,7 +38,7 @@ const Navbar = () => {
 
         {/* LOGO */}
         <div className="font-semibold">
-          <img src={Logo} alt="" className="w-20"/>
+          <img src={Logo} alt="" className="w-20 "/>
         </div>
 
         {/* DESKTOP MENU */}
