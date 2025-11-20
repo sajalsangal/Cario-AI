@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Footer from './Footer'
+import Footer from '../Footer/Footer'
 import { motion, useInView } from 'framer-motion'
-import purpleBlob from '../assets/blob-purple.svg'
-import redBlob from '../assets/blob-red.svg'
-import polygon from '../assets/polygon.png'
+import purpleBlob from '../../assets/blob-purple.svg'
+import redBlob from '../../assets/blob-red.svg'
+import polygon from '../../assets/polygon.png'
 import { TypeAnimation } from 'react-type-animation';
-import AIFlowStepsAnimated from './AIFlowStepsAnimated'
+import AIFlowStepsAnimated from '../AIFlowStepsAnimated/AIFlowStepsAnimated'
 import { Link } from "react-router-dom";
 import { SiElasticsearch } from "react-icons/si";
 
@@ -72,7 +72,7 @@ const HomePage = () => {
                 </Link>
                 <a href="#video">
                   <button className="border-2 border-[#c9a8f5] bg-[#e8d9f9] text-black px-12 py-4 text-[1.1rem] font-semibold hover:bg-[#d4b5f7] transition-all rounded-xl h-16">
-                    Watch Demo
+                    Watch Video
                   </button>
                 </a>
               </div>
@@ -127,14 +127,14 @@ const HomePage = () => {
 
               {/* Browser Content - Video Player */}
               <div className="bg-black aspect-video relative">
-                <video
-                  className="w-full h-full object-cover"
-                  controls
-                  poster="https://via.placeholder.com/1200x675/1f2937/ffffff?text=AI+NERDS+Demo+Video"
-                >
-                  <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <iframe
+                  className="w-full h-full rounded-xl"
+                  src="https://www.youtube.com/embed/xoykumxJT2Y"
+                  title="AI NERDS Demo Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+
               </div>
             </div>
           </div>

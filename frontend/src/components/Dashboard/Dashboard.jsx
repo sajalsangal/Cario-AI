@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 import React, { useState, useEffect, useRef } from 'react'
-import ATSReviewContent from './ATSReviewContent'
-import AIMockQuizContent from './AIMockQuizContent'
-import AIHRInterviewContent from './AIHRInterviewContent'
+import ATSReviewContent from '../ATSReviewContent/ATSReviewContent'
+import AIMockQuizContent from '../AIMockQuizContent/AIMockQuizContent'
+import AIHRInterviewContent from '../AIHRInterviewContent/AIHRInterviewContent'
 
-const backend = import.meta.env.VITE_BACKEND_URL || "https://cario-ai.onrender.com";
+const backend = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('job-fetch')
@@ -14,12 +14,9 @@ const Dashboard = () => {
   const [experience, setExperience] = useState('Entry Level')
   const [timeframe, setTimeframe] = useState('All time')
   const [remotework, setRemotework] = useState('Remote')
-  const [resumeData, setResumeData] = useState(null)
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [rawModelText, setRawModelText] = useState('');
   const [jobs, setJobs] = useState([]);
-  const [jobTitles, setJobTitles] = useState([]);
   const [showApiKey, setShowApiKey] = useState(false)
   const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState(null)
@@ -44,33 +41,39 @@ const Dashboard = () => {
 
   const fetchJobs = async () => {
     if (!apiKey.trim()) {
-      alert("Enter a valid Gemini API Key");
+      alert("Please enter a valid Gemini API Key");
       return;
     }
 
     if (!fileInputRef.current?.files[0]) {
-      alert("Upload a resume PDF first");
+      alert("Please upload a resume PDF first");
       return;
     }
 
-    try {
-      setError("");
-      setLoading(true);
+    setError("");
+    setLoading(true);
 
+    try {
       const file = fileInputRef.current.files[0];
 
       const formData = new FormData();
       formData.append("resume", file);
       formData.append("apiKey", apiKey);
 
-      // Extract skills from resume
-      const skillRes = await axios.post(`${backend}/extract-skills`, formData , {
+      const skillRes = await axios.post(`${backend}/extract-skills`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setSkills(skillRes.data.skills);
-      setRawModelText(skillRes.data.raw);
 
-      // Fetch jobs based on skills
+      if (!skillRes.data || !skillRes.data.skills) {
+        throw new Error("Failed to extract skills from resume");
+      }
+
+      if (skillRes.data.skills.length === 0) {
+        throw new Error("No skills found in resume. Please upload a detailed resume.");
+      }
+
+      setSkills(skillRes.data.skills);
+
       const jobRes = await axios.post(`${backend}/fetch-jobs`, {
         apiKey,
         skills: skillRes.data.skills,
@@ -80,11 +83,42 @@ const Dashboard = () => {
         remotework
       });
 
-      setJobTitles(jobRes.data.jobTitles);
+      if (!jobRes.data || !jobRes.data.jobs) {
+        throw new Error("Failed to fetch jobs");
+      }
+
+      if (jobRes.data.jobs.length === 0) {
+        setJobs([]);
+        alert("No jobs found matching your criteria. Try changing the filters.");
+        return;
+      }
+
       setJobs(jobRes.data.jobs);
     } catch (err) {
-      console.error(err);
-      setError("Processing failed.");
+      console.error("Error fetching jobs:", err);
+      
+      let errorMessage = "Failed to process your request. ";
+      
+      if (err.response) {
+        if (err.response.status === 401) {
+          errorMessage = "Invalid API Key. Please check your Gemini API Key.";
+        } else if (err.response.status === 429) {
+          errorMessage = "API rate limit exceeded. Please try again later.";
+        } else if (err.response.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        } else if (err.response.data?.error) {
+          errorMessage = err.response.data.error;
+        } else {
+          errorMessage += `Error: ${err.response.status}`;
+        }
+      } else if (err.request) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
+      setJobs([]);
     } finally {
       setLoading(false);
     }
@@ -97,7 +131,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 relative pt-[7.5rem] lg:pt-0">
-      {/* Mobile Horizontal Menu - Always visible on mobile, below the main navbar */}
       <div className="lg:hidden fixed top-[4.5rem] left-0 right-0 bg-white shadow-md z-40 overflow-x-auto">
         <div className="flex gap-1.5 p-2 px-3">
           <button
@@ -139,9 +172,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Left Sidebar - Purple Background - Hidden on mobile */}
       <div className={`hidden lg:flex bg-[#c9a8f5] text-white flex-col transition-all duration-500 ease-in-out overflow-hidden h-screen sticky top-0 ${isSidebarCollapsed ? 'w-20' : 'w-72'}`}>
-        {/* User Profile Section */}
         <div className="p-6 border-b border-purple-400">
           <div className="flex items-center gap-4 group cursor-pointer hover:bg-purple-300 hover:bg-opacity-30 p-2 rounded-lg transition-all duration-300">
             <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 animate-pulse">
@@ -156,9 +187,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Navigation Menu */}
         <nav className="flex-1 py-6">
-          {/* Job Fetch - Active */}
           <button
             onClick={() => setActiveTab('job-fetch')}
             className={`group w-full px-6 py-4 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-300 relative ${activeTab === 'job-fetch'
@@ -175,7 +204,6 @@ const Dashboard = () => {
             {!isSidebarCollapsed && <span className="text-lg font-semibold">Job Fetch</span>}
           </button>
 
-          {/* ATS Review */}
           <button
             onClick={() => setActiveTab('ats-review')}
             className={`group w-full px-6 py-4 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-300 relative ${activeTab === 'ats-review'
@@ -192,7 +220,6 @@ const Dashboard = () => {
             {!isSidebarCollapsed && <span className="text-lg font-semibold">ATS Review</span>}
           </button>
 
-          {/* AI Mock Quiz */}
           <button
             onClick={() => setActiveTab('mock-quiz')}
             className={`group w-full px-6 py-4 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-300 relative ${activeTab === 'mock-quiz'
@@ -209,7 +236,6 @@ const Dashboard = () => {
             {!isSidebarCollapsed && <span className="text-lg font-semibold">Mock Quiz (J.D)</span>}
           </button>
 
-          {/* AI HR Interview */}
           <button
             onClick={() => setActiveTab('hr-interview')}
             className={`group w-full px-6 py-4 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-300 relative ${activeTab === 'hr-interview'
@@ -227,7 +253,6 @@ const Dashboard = () => {
           </button>
         </nav>
 
-        {/* Collapse Button at Bottom */}
         <div className="p-4 border-t border-purple-400">
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -242,25 +267,21 @@ const Dashboard = () => {
       </div>
 
       <div className='flex flex-col flex-1 p-4 sm:p-6 md:p-8 lg:p-10 gap-6 sm:gap-8 lg:gap-10 pt-4 lg:pt-4'>
-        {/* API Key Input and Upload Button with Animation */}
-        <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 mb-0 animate-fade-in-down`}>
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-0 animate-fade-in-down">
           <input
             type={showApiKey ? 'text' : 'password'}
             placeholder="Enter your Gemini API Key, ex: AIzaSy..."
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-lg text-base sm:text-lg focus:outline-none focus:border-[#e85d75] focus:shadow-lg focus:scale-[1.02] transition-all duration-300 hover:border-[#e85d75]/50"
+            className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-lg text-base sm:text-lg focus:outline-none focus:border-pink-500 focus:shadow-lg transition-all duration-300 hover:border-pink-300"
           />
 
-          {/* Show/Hide Button */}
           <button
             type="button"
             onClick={() => setShowApiKey(!showApiKey)}
-            className="relative md:top-1/2 -translate-y-1/2 text-gray-600 
-               hover:text-gray-800 transition"
+            className="text-gray-600 hover:text-gray-800 transition"
           >
             {showApiKey ? (
-              // Eye Off Icon
               <svg xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6"
                 fill="none"
@@ -273,7 +294,6 @@ const Dashboard = () => {
                   d="M6.228 6.228A11.948 11.948 0 003 12c2 5 7 8 9 8a11.9 11.9 0 005.772-2.228M9.88 9.88L3 3" />
               </svg>
             ) : (
-              // Eye Icon
               <svg xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6"
                 fill="none"
@@ -290,8 +310,9 @@ const Dashboard = () => {
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 sm:hover:scale-110 active:scale-95 whitespace-nowrap ${selectedFile ? 'bg-green-500 hover:bg-green-600' : 'bg-[#e85d75] hover:bg-[#d94967]'
-              } ${activeTab === 'mock-quiz' || activeTab === 'hr-interview' ? 'hidden' : ''}`}
+            className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap ${
+              selectedFile ? 'bg-green-500 hover:bg-green-600' : 'bg-pink-500 hover:bg-pink-600'
+            } ${activeTab === 'mock-quiz' || activeTab === 'hr-interview' ? 'hidden' : ''}`}
           >
             {selectedFile ? '✓ File Selected' : 'Upload Your Resume'}
           </button>
@@ -304,16 +325,13 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Info Text with Animation */}
-        <p className={`text-xs sm:text-sm text-gray-600 text-center sm:text-left animate-fade-in`}>
-          Create your own Gemini API key from <a href="https://aistudio.google.com" target="_blank" className="font-semibold underline text-green-500 hover:text-[#e85d75] transition-colors duration-300">Google AI Studio</a>. <a href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce" target="_blank" className=" font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300">Watch Video</a> to learn more.
+        <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left animate-fade-in">
+          Create your own Gemini API key from <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer" className="font-semibold underline text-green-500 hover:text-pink-500 transition-colors">Google AI Studio</a>. <a href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-500 hover:text-blue-700 transition-colors">Watch Video</a> to learn more.
           <br />
-          <b>We do not store your api key.</b>
+          <b>We do not store your API key.</b>
         </p>
 
-        {/* Main Content Area */}
-        <div className={`flex-1 p-0 transition-all duration-500 ml-0`}>
-          {/* Conditional Content Based on Active Tab */}
+        <div className="flex-1 p-0 transition-all duration-500">
           {activeTab === 'ats-review' ? (
             <ATSReviewContent apiKey={apiKey} selectedFile={selectedFile} />
           ) : activeTab === 'mock-quiz' ? (
@@ -322,18 +340,13 @@ const Dashboard = () => {
             <AIHRInterviewContent apiKey={apiKey} />
           ) : (
             <>
-
-
-              {/* Search Section */}
-              <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-6 sm:mb-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 animate-fade-in-up">
-                <h1 className='text-white text-center font-semibold text-lg sm:text-xl mb-2 animate-fade-in'>Auto Job Suggestions Based On Resume</h1>
-                <p className="text-sm sm:text-base md:text-lg text-gray-100 mt-1 mb-3 sm:mb-1 text-center sm:text-left animate-fade-in">
+              <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-6 sm:mb-8 shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h1 className="text-white text-center font-semibold text-lg sm:text-xl mb-2">Get Job Suggestions Based On Resume</h1>
+                <p className="text-sm sm:text-base md:text-lg text-gray-100 mt-1 mb-3 sm:mb-1 text-center sm:text-left">
                   Select filters for better results.
                 </p>
 
-                {/* Filter Dropdowns and Search Button */}
                 <div className="flex flex-col sm:grid sm:grid-cols-2 lg:flex lg:flex-row gap-3 sm:gap-4 items-stretch lg:items-center">
-                  {/* Fulltime Dropdown */}
                   <select
                     value={fulltime}
                     onChange={(e) => setFulltime(e.target.value)}
@@ -346,7 +359,6 @@ const Dashboard = () => {
                     <option value="all-types">All Types</option>
                   </select>
 
-                  {/* Timeframe Dropdown */}
                   <select
                     value={timeframe}
                     onChange={(e) => setTimeframe(e.target.value)}
@@ -359,7 +371,6 @@ const Dashboard = () => {
                     <option value="All time">All Time</option>
                   </select>
 
-                  {/* Experience Dropdown */}
                   <select
                     value={experience}
                     onChange={(e) => setExperience(e.target.value)}
@@ -378,11 +389,9 @@ const Dashboard = () => {
                     className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-700 text-white rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-400 cursor-pointer hover:bg-gray-600 transition-colors duration-200"
                   >
                     <option value="true">Remote</option>
-                    <option value="false">Both</option>
-
+                    <option value="false">All</option>
                   </select>
 
-                  {/* Search Button */}
                   <button className="px-6 sm:px-10 py-2.5 sm:py-3 bg-gradient-to-r from-pink-400 to-pink-500 text-white rounded-lg text-base sm:text-lg font-bold hover:from-pink-500 hover:to-pink-600 transition-all duration-300 flex items-center justify-center gap-2 lg:ml-auto hover:scale-105 active:scale-95 shadow-md hover:shadow-lg sm:col-span-2 lg:col-span-1"
                     onClick={fetchJobs}
                   >
@@ -395,12 +404,44 @@ const Dashboard = () => {
                 <p className='text-xs text-white mt-2 sm:mt-1 text-center sm:text-left'>If no jobs found, try changing filters.</p>
               </div>
 
-              {/* Job Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                {loading && <p style={{ color: "#0ea5e9" }} className="animate-pulse">Processing…</p>}
-                {error && <p style={{ color: "red" }} className="animate-shake">{error}</p>}
-                {/* Fetched job cards */}
-                {jobs.length > 0 && (
+                {loading && (
+                  <div className="col-span-full flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mb-4"></div>
+                      <p className="text-blue-500 font-semibold">Processing your resume...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {error && !loading && (
+                  <div className="col-span-full bg-red-50 border border-red-300 text-red-700 px-6 py-4 rounded-xl flex items-start gap-3">
+                    <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <div className="flex-1">
+                      <p className="font-semibold mb-1">Error</p>
+                      <p className="text-sm">{error}</p>
+                    </div>
+                    <button onClick={() => setError("")} className="text-red-700 hover:text-red-900">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+                
+                {!loading && !error && jobs.length === 0 && (
+                  <div className="col-span-full text-center py-12">
+                    <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <p className="text-gray-600 text-lg font-medium">No jobs found</p>
+                    <p className="text-gray-500 text-sm mt-2">Upload your resume and click search to find jobs</p>
+                  </div>
+                )}
+                
+                {jobs.length > 0 && !loading && (
                   <>
                     {jobs.map((job, i) => {
                       let animationClass = '';
@@ -409,7 +450,7 @@ const Dashboard = () => {
                       else animationClass = 'animate-slide-in-up';
 
                       return (
-                        <div key={i} className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-200 hover:shadow-2xl hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-[1.01] sm:hover:scale-[1.02] transition-all duration-300 cursor-pointer ${animationClass}`} style={{ animationDelay: `${i * 0.1}s`, animationFillMode: 'backwards' }}>
+                        <div key={i} className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-200 hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer ${animationClass}`}>
 
                           <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">{job.job_title}</h3>
                           <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">{job.employer_name}</h4>
@@ -418,8 +459,8 @@ const Dashboard = () => {
                           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
                             <p className="text-xs text-gray-500">{job.job_employment_types[0]} · {job.job_posted_at}</p>
 
-                            <a href={job.job_apply_link} target="_blank" className="w-full sm:w-auto">
-                              <button className="group w-full sm:w-auto px-5 sm:px-6 py-2 bg-gradient-to-r from-pink-400 to-pink-500 text-white rounded-lg text-sm font-bold hover:from-pink-500 hover:to-pink-600 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+                            <a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                              <button className="group w-full sm:w-auto px-5 sm:px-6 py-2 bg-pink-500 text-white rounded-lg text-sm font-bold hover:bg-pink-600 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
                                 Apply Now
                                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
-import Logo from '../assets/logo.png'
+import Logo from '../../assets/logo.png'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ const Navbar = () => {
       <div className="py-2 flex justify-between items-center">
 
         {/* LOGO */}
-        <div className="font-semibold cursor-pointer">
+        <div className="font-semibold">
           <img src={Logo} alt="" className="w-20"/>
         </div>
 

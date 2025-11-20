@@ -1,7 +1,7 @@
 import React from 'react'
-import Logo from '../assets/logo.png'
-import Almabetter from '../assets/almabetter.png'
-import Woolf from '../assets/woolf.png'
+import Logo from '../../assets/logo.png'
+import Almabetter from '../../assets/almabetter.png'
+import Woolf from '../../assets/woolf.png'
 
 const Footer = () => {
   return (
