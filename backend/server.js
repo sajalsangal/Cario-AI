@@ -26,6 +26,9 @@ app.post("/extract-skills", upload.single("resume"), async (req, res) => {
   try {
     const { apiKey } = req.body;
 
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
     if (!req.file)
       return res.status(400).json({ error: "No PDF uploaded" });
 
@@ -76,8 +79,14 @@ app.post("/fetch-jobs", async (req, res) => {
   try {
     const { apiKey, skills, fulltime, timeframe, experience, remotework } = req.body;
 
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
     if (!skills || skills.length === 0)
       return res.status(400).json({ error: "No skills provided" });
+
+    if (!fulltime || !timeframe || !experience || !remotework)
+      return res.status(400).json({ error: "Filters missing" });
 
     const employmentMap = {
       "Fulltime": "FULLTIME",
@@ -170,6 +179,9 @@ app.post("/analyze-resume", upload.single("resume"), async (req, res) => {
     if (!req.file)
       return res.status(400).json({ error: "No PDF uploaded" });
 
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
     const parsed = await pdfParse(req.file.buffer);
     const resumeText = parsed.text.trim();
 
@@ -183,6 +195,8 @@ Provide structured feedback as JSON with the following keys:
 {
   "score": <number between 0 and 100>,
   "skills_detected": [list of top technical and soft skills],
+  "experience": [Short bullet point description of working/extra-curricular experience/activities],
+  "projects": [Short bullet point description of projects mentioned in the resume],
   "missing_keywords": [skills or terms missing compared to the job description],
   "formatting_issues": [short bullet points of detected format issues],
   "summary": "2-3 line overall feedback on resume quality"
@@ -212,6 +226,114 @@ Resume Text:
     return res.status(500).json({ error: "ATS review failed" });
   }
 });
+
+app.post("/api/hr-question-generate", async (req, res) => {
+  try {
+    const { apiKey, interviewType } = req.body;
+
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
+    if (!interviewType)
+      return res.status(400).json({ error: "Interview Type not defined" });
+
+    const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+    const prompt = `
+      Give one ${interviewType} interview question in English.
+      Provide unique questions everytime. Questions should be professional and job related which are actually asked in a real interview. 
+      The difficulty level should between easy and medium.
+      Only output the question.
+    `;
+
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }]
+    };
+
+    const response = await axios.post(url, body, {
+      headers: { "Content-Type": "application/json" },
+      timeout: 30000
+    });
+
+    const data = response.data;
+
+    const questionText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+    if (!questionText) {
+      return res.status(500).json({ error: "No question generated. Please try again." });
+    }
+
+    return res.json({ questionText });  // SAFE RETURN
+  }
+  catch (error) {
+    console.error("❌ Error generating question", error?.response?.data || error.message);
+    return res.status(500).json({
+      error:
+        error?.response?.data?.error?.message ||
+        error.message ||
+        "Something went wrong while generating question"
+    });
+  }
+});
+
+// --------------------------- HR Answer Feedback ---------------------------
+app.post("/api/hr-feedback", async (req, res) => {
+  try {
+    const { apiKey, question, answer } = req.body;
+
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
+    if (!question)
+      return res.status(400).json({ error: "Question not provided" });
+
+    if (!answer || !answer.trim())
+      return res.status(400).json({ error: "Answer is empty" });
+
+    const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+    const prompt = `
+Evaluate this job interview answer for clarity, fluency, grammar.
+- Give feedback within 100 words.
+- Add a blank line.
+- Give a score out of 10.
+- Use bold or italics for important parts.
+
+Question: ${question}
+Answer: ${answer}
+`;
+
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }]
+    };
+
+    const response = await axios.post(url, body, {
+      headers: { "Content-Type": "application/json" },
+      timeout: 30000,
+    });
+
+    const feedbackText =
+      response?.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!feedbackText) {
+      throw new Error("No feedback generated. Please try again.");
+    }
+
+    return res.json({ feedback: feedbackText });
+
+  } catch (error) {
+    console.error("❌ Error generating HR feedback:", error?.response?.data || error.message);
+
+    return res.status(500).json({
+      error:
+        error?.response?.data?.error?.message ||
+        error.message ||
+        "Something went wrong while generating feedback"
+    });
+  }
+});
+
 
 // --------------------------- Generate Questions ---------------------------
 app.post("/api/generate", async (req, res) => {
@@ -275,7 +397,7 @@ Output format:
 // --------------------------- Feedback Route ---------------------------
 app.post("/api/feedback", async (req, res) => {
   try {
-    const {apiKey, question, answer } = req.body;
+    const { apiKey, question, answer } = req.body;
     if (!question || !answer) {
       return res.status(400).json({ error: "Question and answer required" });
     }
