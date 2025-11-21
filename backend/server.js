@@ -18,19 +18,26 @@ const upload = multer({
 // ENV
 const PORT = process.env.PORT || 5000;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+const GENERATE_TEMPORARY_KEY = process.env.GENERATE_TEMPORARY_KEY
+const GEMINI_KEY = process.env.GEMINI_KEY
 
 /* ============================================================
    1️⃣  EXTRACT SKILLS DIRECTLY FROM UPLOADED FILE
 ============================================================ */
 app.post("/extract-skills", upload.single("resume"), async (req, res) => {
   try {
-    const { apiKey } = req.body;
+    let { apiKey } = req.body;
 
     if (!apiKey)
       return res.status(400).json({ error: "No API Key Found" });
 
     if (!req.file)
       return res.status(400).json({ error: "No PDF uploaded" });
+
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
+      
 
     const parsed = await pdfParse(req.file.buffer);
     const resumeText = parsed.text.trim();
@@ -77,7 +84,7 @@ ${resumeText}
 ============================================================ */
 app.post("/fetch-jobs", async (req, res) => {
   try {
-    const { apiKey, skills, fulltime, timeframe, experience, remotework } = req.body;
+    let { apiKey, skills, fulltime, timeframe, experience, remotework } = req.body;
 
     if (!apiKey)
       return res.status(400).json({ error: "No API Key Found" });
@@ -88,12 +95,15 @@ app.post("/fetch-jobs", async (req, res) => {
     if (!fulltime || !timeframe || !experience || !remotework)
       return res.status(400).json({ error: "Filters missing" });
 
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
+
     const employmentMap = {
       "Fulltime": "FULLTIME",
       "Part-time": "PARTTIME",
       "Contract": "CONTRACTOR",
-      "Internship": "INTERN",
-      "all-types": ""
+      "Internship": "INTERN"
     };
 
     const timeframeMap = {
@@ -107,9 +117,7 @@ app.post("/fetch-jobs", async (req, res) => {
     const experienceMap = {
       "No_experience": "no_experience",
       "Entry Level": "under_3_years_experience",
-      "Mid Level": "more_than_3_years_experience",
-      "No Degree": "no_degree",
-      "all-experience": ""
+      "Mid Level": "more_than_3_years_experience"
     };
 
     const remoteMap = { "true": true, "false": false };
@@ -175,12 +183,16 @@ Return EXACTLY 3 real-world job titles in JSON array only.
 ============================================================ */
 app.post("/analyze-resume", upload.single("resume"), async (req, res) => {
   try {
-    const { apiKey, jobDesc } = req.body;
+    let { apiKey, jobDesc } = req.body;
     if (!req.file)
       return res.status(400).json({ error: "No PDF uploaded" });
 
     if (!apiKey)
       return res.status(400).json({ error: "No API Key Found" });
+
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
 
     const parsed = await pdfParse(req.file.buffer);
     const resumeText = parsed.text.trim();
@@ -229,13 +241,17 @@ Resume Text:
 
 app.post("/api/hr-question-generate", async (req, res) => {
   try {
-    const { apiKey, interviewType } = req.body;
+    let { apiKey, interviewType } = req.body;
 
     if (!apiKey)
       return res.status(400).json({ error: "No API Key Found" });
 
     if (!interviewType)
       return res.status(400).json({ error: "Interview Type not defined" });
+
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
 
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
@@ -280,7 +296,7 @@ app.post("/api/hr-question-generate", async (req, res) => {
 // --------------------------- HR Answer Feedback ---------------------------
 app.post("/api/hr-feedback", async (req, res) => {
   try {
-    const { apiKey, question, answer } = req.body;
+    let { apiKey, question, answer } = req.body;
 
     if (!apiKey)
       return res.status(400).json({ error: "No API Key Found" });
@@ -291,6 +307,10 @@ app.post("/api/hr-feedback", async (req, res) => {
     if (!answer || !answer.trim())
       return res.status(400).json({ error: "Answer is empty" });
 
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
+    
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
     const prompt = `
@@ -338,11 +358,19 @@ Answer: ${answer}
 // --------------------------- Generate Questions ---------------------------
 app.post("/api/generate", async (req, res) => {
   try {
-    const { apiKey, jobDesc } = req.body;
+    let { apiKey, jobDesc } = req.body;
+
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
     if (!jobDesc) {
       return res.status(400).json({ error: "Job description required" });
     }
 
+    //temporary key check
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
+    
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
     const prompt = `
@@ -397,10 +425,17 @@ Output format:
 // --------------------------- Feedback Route ---------------------------
 app.post("/api/feedback", async (req, res) => {
   try {
-    const { apiKey, question, answer } = req.body;
+    let { apiKey, question, answer } = req.body;
+
+    if (!apiKey)
+      return res.status(400).json({ error: "No API Key Found" });
+
     if (!question || !answer) {
       return res.status(400).json({ error: "Question and answer required" });
     }
+
+    if(apiKey === GENERATE_TEMPORARY_KEY)
+       {apiKey = GEMINI_KEY;}
 
     const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
