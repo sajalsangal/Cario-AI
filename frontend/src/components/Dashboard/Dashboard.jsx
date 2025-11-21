@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [fulltime, setFulltime] = useState('Fulltime')
   const [experience, setExperience] = useState('Entry Level')
   const [timeframe, setTimeframe] = useState('All time')
-  const [remotework, setRemotework] = useState('Remote')
+  const [remotework, setRemotework] = useState('false')
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
   const [jobs, setJobs] = useState([]);
@@ -308,6 +308,13 @@ const Dashboard = () => {
             )}
           </button>
 
+          <button 
+          className='text-white  sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-md font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap bg-black'
+          onClick={() => setApiKey(import.meta.env.VITE_TEMPORARY_KEY)}
+          >
+            Generate Temporary Key
+          </button>
+
           <button
             onClick={() => fileInputRef.current?.click()}
             className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap ${
@@ -325,11 +332,34 @@ const Dashboard = () => {
           />
         </div>
 
-        <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left animate-fade-in">
-          Create your own Gemini API key from <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer" className="font-semibold underline text-green-500 hover:text-pink-500 transition-colors">Google AI Studio</a>. <a href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-500 hover:text-blue-700 transition-colors">Watch Video</a> to learn more.
-          <br />
-          <b>We do not store your API key.</b>
-        </p>
+        <div className="mt-4 p-4 sm:p-5 border-l-4 border-pink-500 bg-pink-50 rounded-lg shadow-sm animate-fade-in">
+  <p className="text-xs sm:text-sm text-pink-800">
+    Temporary key is shared among many users and can get rate limited, use it only for testing purpose.
+    
+    <br /><br />
+    <span className="font-semibold text-pink-800">
+      [ Recommended ] Generate your own Gemini API key at {' '}
+    <a 
+      href="https://aistudio.google.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="font-semibold underline text-pink-600 hover:text-pink-800 transition"
+    >
+    Google AI Studio
+    </a>.  
+    Here’s a quick {' '}
+    <a 
+      href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="font-semibold underline text-purple-600 hover:text-purple-800 transition"
+    >
+      Video Guide
+    </a>.
+    </span>
+  </p>
+</div>
+
 
         <div className="flex-1 p-0 transition-all duration-500">
           {activeTab === 'ats-review' ? (
@@ -356,7 +386,6 @@ const Dashboard = () => {
                     <option value="Part-time">Part-time</option>
                     <option value="Contract">Contractor</option>
                     <option value="Internship">Intern</option>
-                    <option value="all-types">All Types</option>
                   </select>
 
                   <select
@@ -379,8 +408,6 @@ const Dashboard = () => {
                     <option value="No_experience">No Experience</option>
                     <option value="Entry Level">Entry Level [ 0 - 3 Years ]</option>
                     <option value="Mid Level">Senior Openings</option>
-                    <option value="No Degree">No Degree</option>
-                    <option value="all-experience">All Types</option>
                   </select>
 
                   <select
