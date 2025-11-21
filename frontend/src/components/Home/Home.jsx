@@ -492,15 +492,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-pink-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            MG
+            VC
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Martin Goutry</h3>
-            <p className="text-sm text-white/80">Back-end developer at MyDonow</p>
+            <h3 className="text-xl font-bold text-white">Vivek CP</h3>
+            <p className="text-sm text-white/80">Instructor @Almabetter</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "Dico is finally addressing a long time problem we had when building UIs. It's ease of use and workflow seems really intuitive. Promising! &gt;&gt;"
+         "CarioAI feels like having a personal career coach. From resume analysis to job discovery and interview practice, the platform simplifies everything. A must-have for job seekers." 
         </p>
       </div>
 
@@ -508,15 +508,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-cyan-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            SK
+            PS
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Sarah Kim</h3>
-            <p className="text-sm text-white/80">Product Manager at TechCorp</p>
+            <h3 className="text-xl font-bold text-white">Pranjal Sangal</h3>
+            <p className="text-sm text-white/80">Software Engineer @NSE</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "AI NERDS transformed my job search completely. I found my dream role in just 2 weeks! The AI matching is incredibly accurate."
+          “The ATS Resume Review blew my mind. It pointed out missing keywords, formatting issues, and even graded my resume. After applying the fixes, I started getting interview calls within days.”
         </p>
       </div>
 
@@ -524,15 +524,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-emerald-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            RP
+            VV
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Raj Patel</h3>
-            <p className="text-sm text-white/80">Software Engineer at StartupXYZ</p>
+            <h3 className="text-xl font-bold text-white">Varun Varshney</h3>
+            <p className="text-sm text-white/80">Software Engineer @TCS</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "The ATS score feature helped me optimize my resume. I started getting 3x more interview calls. Highly recommend!"
+          “CarioAI reduced my job search from weeks to minutes. It scanned my resume, extracted my skills, and recommended genuine roles that perfectly matched my profile. I’ve never seen a more accurate job fetch tool.”
         </p>
       </div>
 
@@ -540,15 +540,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-red-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            EJ
+            SG
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Emily Johnson</h3>
-            <p className="text-sm text-white/80">UX Designer at CreativeHub</p>
+            <h3 className="text-xl font-bold text-white">Shivam Garg</h3>
+            <p className="text-sm text-white/80">Software Engineer @MAQ Software</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "Mock interview practice was a game changer. I felt so prepared and confident during my actual interviews!"
+          “The mock quiz feature is a game-changer. I pasted the job description and got compressed, relevant interview questions instantly. It helped me prepare better than any course.”
         </p>
       </div>
 
@@ -556,15 +556,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-orange-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            DL
+            SG
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">David Lee</h3>
-            <p className="text-sm text-white/80">Data Analyst at DataCo</p>
+            <h3 className="text-xl font-bold text-white">Sahil Gupta</h3>
+            <p className="text-sm text-white/80">Backend Engineer @Nvidia</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "The job alerts kept me updated on perfect matches. I never missed an opportunity. Best job search tool ever!"
+          “The AI HR Interview felt shockingly real. It asked practical HR questions, evaluated my answers, and gave honest feedback. My confidence improved immediately.”
         </p>
       </div>
 
@@ -572,15 +572,15 @@ const TestimonialCardsScroller = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-purple-400 shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:bg-white/20 transition-all duration-300 opacity-0 animate-fadeInUp min-w-[85vw] md:min-w-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
-            AL
+            AY
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Anna Lopez</h3>
-            <p className="text-sm text-white/80">Marketing Lead at BrandWorks</p>
+            <h3 className="text-xl font-bold text-white">Ayush Yadav</h3>
+            <p className="text-sm text-white/80">Internal Audit @KPMG</p>
           </div>
         </div>
         <p className="text-white/90 leading-relaxed italic">
-          "Company insights helped me make informed decisions. I knew exactly what to expect before applying. Amazing!"
+          “Instead of scrolling endlessly on job portals, CarioAI analyzed my resume and instantly returned the right openings. The job titles it suggested were exactly aligned with my background. Super accurate!”
         </p>
       </div>
 
