@@ -312,7 +312,7 @@ const Dashboard = () => {
           className='text-white  sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-md font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap bg-black'
           onClick={() => setApiKey(import.meta.env.VITE_TEMPORARY_KEY)}
           >
-            Generate Temporary Key
+            Get Temporary Key
           </button>
 
           <button
@@ -334,9 +334,9 @@ const Dashboard = () => {
 
         <div className="mt-4 p-4 sm:p-5 border-l-4 border-pink-500 bg-pink-50 rounded-lg shadow-sm animate-fade-in">
   <p className="text-xs sm:text-sm text-pink-800">
-    Temporary key is shared among many users and can get rate limited, use it only for testing purpose.
+    Temporary key may get rate limited or become unavailable, use it only for testing purpose.
     
-    <br /><br />
+    <br /> <br />
     <span className="font-semibold text-pink-800">
       [ Recommended ] Generate your own Gemini API key at {' '}
     <a 

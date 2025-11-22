@@ -117,77 +117,73 @@ const AIHRInterviewContent = ({ apiKey }) => {
   };
 
   const getFeedback = async () => {
-  if (!answer.trim()) {
-    setError("Please speak or type your answer first");
-    return;
-  }
-
-  if (!apiKey) {
-    setError("Please enter your Gemini API Key");
-    return;
-  }
-
-  if (!question) {
-    setError("Please generate a question first.");
-    return;
-  }
-
-  setGenerateFeedback(true);
-  setError("");
-
-  try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/hr-feedback`,
-      { apiKey, question, answer }
-    );
-
-    if (!res.data) {
-      throw new Error("No response from server");
+    if (!answer.trim()) {
+      setError("Please speak or type your answer first");
+      return;
     }
 
-    const { feedback } = res.data;
-
-    if (!feedback) {
-      throw new Error("No feedback generated. Please try again.");
+    if (!apiKey) {
+      setError("Please enter your Gemini API Key");
+      return;
     }
 
-    setFeedback(feedback);
+    if (!question) {
+      setError("Please generate a question first.");
+      return;
+    }
 
-  } catch (err) {
-    console.error("Error generating feedback:", err);
+    setGenerateFeedback(true);
+    setError("");
 
-    let errorMessage = "Failed to generate feedback. ";
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/hr-feedback`,
+        { apiKey, question, answer }
+      );
 
-    if (err.response) {
-      if (err.response.status === 401) {
-        errorMessage = "Invalid API Key.";
-      } else if (err.response.data?.error) {
-        errorMessage = err.response.data.error;
-      } else {
-        errorMessage += `Server error: ${err.response.status}`;
+      if (!res.data) {
+        throw new Error("No response from server");
       }
-    } else {
-      errorMessage = err.message;
+
+      const { feedback } = res.data;
+
+      if (!feedback) {
+        throw new Error("No feedback generated. Please try again.");
+      }
+
+      setFeedback(feedback);
+
+    } catch (err) {
+      console.error("Error generating feedback:", err);
+
+      let errorMessage = "Failed to generate feedback. ";
+
+      if (err.response) {
+        if (err.response.status === 401) {
+          errorMessage = "Invalid API Key.";
+        } else if (err.response.data?.error) {
+          errorMessage = err.response.data.error;
+        } else {
+          errorMessage += `Server error: ${err.response.status}`;
+        }
+      } else {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+      setFeedback("");
+
+    } finally {
+      setGenerateFeedback(false);
     }
-
-    setError(errorMessage);
-    setFeedback("");
-
-  } finally {
-    setGenerateFeedback(false);
-  }
-};
+  };
 
   return (
-    <div className="bg-white border-2 border-black rounded-2xl p-4 sm:p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-white border-2 border-black rounded-xl p-4 sm:p-8 mb-8 min-h-[400px] shadow-lg hover:shadow-xl transition-all duration-300">
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-700 text-center">
-        🎙️ Practice Communication With AI
+        Practice Communication With AI 🎙️
       </h1>
       <h3 className="text-center text-sm sm:text-base text-gray-500 mb-2">Let our AI help you to overcome your fear of interview and prepare you to speak more clearly and confidently.</h3>
-      <p className="text-xs sm:text-sm mb-4 text-indigo-600 text-center font-bold">
-        Use Chrome Browser on desktop / android and have a proper microphone setup.<br />
-        Speak Slowly and Clearly, without taking pause.
-      </p>
 
       {error && (
         <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-start gap-2">
@@ -229,6 +225,15 @@ const AIHRInterviewContent = ({ apiKey }) => {
           <p className="text-sm sm:text-base text-gray-700">{question}</p>
         </div>
       )}
+
+      <div className={`bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-md text-xs sm:text-sm shadow-sm mb-4
+       ${question === '' ? "hidden" : ""}`}>
+        <p className='text-center'>
+          Voice mode can make mistakes. Use Chrome browser and ensure you have a proper microphone setup.
+          <br className='hidden md:flex text-sm ' />
+          Speak slowly and clearly, without taking pauses.
+        </p>
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-7 mb-4 w-full justify-center">
         <button
