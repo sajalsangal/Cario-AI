@@ -96,9 +96,9 @@ const Dashboard = () => {
       setJobs(jobRes.data.jobs);
     } catch (err) {
       console.error("Error fetching jobs:", err);
-      
+
       let errorMessage = "Failed to process your request. ";
-      
+
       if (err.response) {
         if (err.response.status === 401) {
           errorMessage = "Invalid API Key. Please check your Gemini API Key.";
@@ -116,7 +116,7 @@ const Dashboard = () => {
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
       setJobs([]);
     } finally {
@@ -308,18 +308,17 @@ const Dashboard = () => {
             )}
           </button>
 
-          <button 
-          className='text-white  sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-md font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap bg-black'
-          onClick={() => setApiKey(import.meta.env.VITE_TEMPORARY_KEY)}
+          <button
+            className='text-white  sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-md font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap bg-black'
+            onClick={() => setApiKey(import.meta.env.VITE_TEMPORARY_KEY)}
           >
             Get Temporary Key
           </button>
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap ${
-              selectedFile ? 'bg-green-500 hover:bg-green-600' : 'bg-pink-500 hover:bg-pink-600'
-            } ${activeTab === 'mock-quiz' || activeTab === 'hr-interview' ? 'hidden' : ''}`}
+            className={`text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap ${selectedFile ? 'bg-green-500 hover:bg-green-600' : 'bg-pink-500 hover:bg-pink-600'
+              } ${activeTab === 'mock-quiz' || activeTab === 'hr-interview' ? 'hidden' : ''}`}
           >
             {selectedFile ? '✓ File Selected' : 'Upload Your Resume'}
           </button>
@@ -332,33 +331,34 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="mt-4 p-4 sm:p-5 border-l-4 border-pink-500 bg-pink-50 rounded-lg shadow-sm animate-fade-in">
-  <p className="text-xs sm:text-sm text-pink-800">
-    Temporary key may get rate limited or become unavailable, use it only for testing purpose.
-    
-    <br /> <br />
-    <span className="font-semibold text-pink-800">
-      [ Recommended ] Generate your own Gemini API key at {' '}
-    <a 
-      href="https://aistudio.google.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="font-semibold underline text-pink-600 hover:text-pink-800 transition"
-    >
-    Google AI Studio
-    </a>.  
-    Here’s a quick {' '}
-    <a 
-      href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="font-semibold underline text-purple-600 hover:text-purple-800 transition"
-    >
-      Video Guide
-    </a>.
-    </span>
-  </p>
-</div>
+        <div className={`mt-4 p-4 sm:p-5 border-l-4 border-pink-500 bg-pink-50 rounded-lg shadow-sm animate-fade-in
+          ${apiKey ? "hidden" : ""} `}>
+          <p className="text-xs sm:text-sm text-pink-800">
+            Generate temporary key if you want to try out our services.
+
+            <br /> <br />
+            <span className="font-semibold text-pink-800">
+              [ Recommended ] Generate your own Gemini API key at {' '}
+              <a
+                href="https://aistudio.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline text-pink-600 hover:text-pink-800 transition"
+              >
+                Google AI Studio
+              </a>.
+              Here’s a quick {' '}
+              <a
+                href="https://youtu.be/soB9zHm_o1s?si=z3yUpmMFRKRbm-ce"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline text-purple-600 hover:text-purple-800 transition"
+              >
+                Video Guide
+              </a>.
+            </span>
+          </p>
+        </div>
 
 
         <div className="flex-1 p-0 transition-all duration-500">
@@ -440,7 +440,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {error && !loading && (
                   <div className="col-span-full bg-red-50 border border-red-300 text-red-700 px-6 py-4 rounded-xl flex items-start gap-3">
                     <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -457,7 +457,7 @@ const Dashboard = () => {
                     </button>
                   </div>
                 )}
-                
+
                 {!loading && !error && jobs.length === 0 && (
                   <div className="col-span-full text-center py-12">
                     <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -467,7 +467,7 @@ const Dashboard = () => {
                     <p className="text-gray-500 text-sm mt-2">Upload your resume and click search to find jobs</p>
                   </div>
                 )}
-                
+
                 {jobs.length > 0 && !loading && (
                   <>
                     {jobs.map((job, i) => {
