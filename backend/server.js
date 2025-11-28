@@ -482,6 +482,27 @@ Answer: ${answer}
   }
 });
 
+/* ============================================================
+   4️⃣  FETCH AI NEWS (SERVER SIDE — SAFE & CORS FRIENDLY)
+============================================================ */
+app.get("/api/news", async (req, res) => {
+  try {
+    const NEWS_API_KEY = process.env.NEWS_API_KEY; // don't use VITE_ here
+
+    if (!NEWS_API_KEY)
+      return res.status(500).json({ error: "NEWS_API_KEY missing in backend" });
+
+    const url = `https://newsapi.org/v2/everything?q=artificial+intelligence&language=en&sortBy=publishedAt&pageSize=8&apiKey=${NEWS_API_KEY}`;
+
+    const response = await axios.get(url);
+    return res.json({ articles: response.data.articles });
+  } catch (error) {
+    console.error("❌ NEWS API ERROR:", error?.response?.data || error.message);
+    return res.status(500).json({ error: "Failed to fetch AI news" });
+  }
+});
+
+
 // ROOT
 app.get("/", (req, res) => res.send("Backend running…"));
 
